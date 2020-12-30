@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>flaskTest</title>
+    <script src="../static/js/jquery-3.3.1.min.js"></script>
+    <script src="../static/js/echarts.js"></script>
+    <script src="../static/js/worldcloud.js"></script>
+</head>
+<body>
+
+    <h1>Hello word</h1>
+    <h1>hello flask</h1>
+
+
+    <div id="box">这是一个div</div>
+    <button id="btn">有惊喜</button>
+    <div id="main2" style="width: 600px;height:400px;"></div>
+     <script>
+    $(function(){
+        echartsCloud();//初始化echarts图
+    })
+function echartsCloud(){
+    // 基于准备好的dom，初始化echarts实例
+        var myChart = echarts.init(document.getElementById('main2'));
+
+    myChart.setOption({
+        title: {
+            text: 'echarts3云图展示'
+        },
+        tooltip: {},
+        series: [{
+            type : 'wordCloud',  //类型为字符云
+                shape:'smooth',  //平滑
+                gridSize : 2, //网格尺寸
+                size : ['80%','80%'],
+                //sizeRange : [ 50, 100 ],
+                rotationRange : [ 46, 80 ], //旋转范围
+                textStyle : {
+                    normal : {
+                        fontFamily:'sans-serif',
+                        color : function() {
+                            return 'rgb('
+                                    + [ Math.round(Math.random() * 160),
+                                            Math.round(Math.random() * 160),
+                                            Math.round(Math.random() * 160) ]
+                                            .join(',') + ')';
+                        }
+                    },
+                    emphasis : {
+                        shadowBlur : 5,  //阴影距离
+                        shadowColor : '#3351'  //阴影颜色
+                    }
+                },
+                data:[],
+        }]
+    });
+    // 异步加载数据
+    $.get('../static/json/cloud_ci.json').done(function (data) {
+        // 填入数据
+        myChart.setOption({
+            series: [{
+                data: data.dataCloud,
+            }]
+        });
+    });
+}
+
+
+    </script>
+
+    <script>
+        $('#btn').click(function () {
+            {#alert("hello")#}
+            $.ajax({
+                url: "/ajax",
+                type: "post",
+                data: {"name": 'a', "age": 13},
+                success: function (datas) {
+                    alert(datas)
+                    $('#box').html(datas)
+                },
+                error: function () {
+                    alert('error')
+                }
+            })
+        })
+
+    </script>
+</body>
+</html>
